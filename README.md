@@ -1,2 +1,3 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/SebastianAguilar12/fullstack-javascript-project-137/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/SebastianAguilar12/fullstack-javascript-project-137/actions)
+[![Maintainability](https://qlty.sh/gh/SebastianAguilar12/projects/fullstack-javascript-project-137/maintainability.svg)](https://qlty.sh/gh/SebastianAguilar12/projects/fullstack-javascript-project-137)
