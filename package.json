@@ -20,6 +20,11 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.0.3",
-    "globals": "^17.4.0"
+    "globals": "^17.4.0",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
   }
 }
