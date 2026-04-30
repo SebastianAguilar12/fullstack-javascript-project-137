@@ -3,6 +3,9 @@ import javascriptLogo from './assets/javascript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import { setupCounter } from './counter.js'
+import axios from 'axios'
+import * as yup from 'yup'
+import { proxy, subscribe } from 'valtio/vanilla'
 
 document.querySelector('#app').innerHTML = `
 <section id="center">
@@ -60,10 +63,105 @@ document.querySelector('#app').innerHTML = `
 setupCounter(document.querySelector('#counter'));
 
 const rssForm = document.querySelector('#rss-form');
+const input = rssForm.querySelector('#link');
+const linksList = document.querySelector('.links-list');
+
+const state = proxy({
+  form: {
+    status: 'filling',
+    error: null,
+  },
+  feeds: [], // array of URLs already added.
+});
+
+//Container for error messages (create if not present)
+let feedbackEl = document.querySelector('.feedback');
+if (!feedbackEl) {
+  feedbackEl = document.createElement('p');
+  feedbackEl.classList.add('feedback');
+  rssForm.appendChild(feedbackEl);
+};
+
+yup.setLocale({
+  mixed: {
+    notOneOf: 'RSS already exists.',
+  },
+  string: {
+    url: 'The link must be a valid URL.',
+  },
+});
+
+const buildSchema = (existingUrls) => 
+  yup
+    .string()
+    .trim()
+    .required('Cannot be empty')
+    .url('The link must be a valid URL.')
+    .notOneOf(existingUrls, 'RSS already exists.');
+
+//Subscribe to state
+const render = () => {
+  if (state.form.status === 'invalid') {
+    input.classList.add('is-invalid');
+    feedbackEl.classList.add('text-danger');
+    feedbackEl.textContent = state.form.error ?? '';
+  } else {
+    input.classList.remove('is-invalid');
+    feedbackEl.textContent = '';
+  }
+
+  //Render feeds list
+  linksList.innerHTML = '';
+  state.feeds.forEach((feed) => {
+    const li = document.createElement('li');
+    li.textContent = feed.title || feed.url;
+    linksList.appendChild(li);
+  });
+};
+
+subscribe(state, render);
+render();
+
+const proxyTrueURL = 'https://allorigins.hexlet.app/get?disableCache=true&url=';
 
 rssForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const userUrl = e.target.querySelector('#link').value;
-  fetch(userUrl)
-    .then((data) => console.log(data));
+
+  const userUrl = input.value;
+  const existingUrls = state.feeds.map((f) => f.url);
+  const schema = buildSchema(existingUrls);
+
+  schema
+    .validate(userUrl)
+    .then((validUrl) => {
+      state.form.status = 'filling';
+      state.form.error = null;
+      return axios.get(`${proxyTrueURL}${encodeURIComponent(validUrl)}`);
+    })
+    .then((res) => {
+      const parser = new DOMParser();
+      console.log(parser);
+      const xml = parser.parseFromString(res.data.contents, 'text/xml');
+      const parserError = xml.querySelector('parsererror');
+      if (parserError) {
+        throw new Error('The resource doesn\'t contain valid RSS');
+      }
+      const title = xml.querySelector('channel > title')?.textContent;
+      const description = xml.querySelector('channel > description')?.textContent;
+      const items = [...xml.querySelectorAll('item')].map((item) => ({
+        title: item.querySelector('title')?.textContent,
+        link: item.querySelector('link')?.textContent,
+        description: item.querySelector('description')?.textContent,
+      }));
+
+      state.feeds.push({ url: userUrl, title, description, items });
+      input.value = '';
+      input.focus();
+    })
+    .catch((err) => {
+      state.form.status = 'invalid';
+      state.form.error = err.message;
+      render();
+      input.focus();
+    })
 });

@@ -11,10 +11,15 @@
 <body>
   <div id="app"></div>
   <form id="rss-form">
-    <label for="link">Digita aquí la URL:</label>
-    <input type="url" id="link" placeholder="Digita la URL" required>
-    <button type="submit">Agregar</button>
+    <label for="link">RSS Link:</label>
+    <input type="text" id="link" placeholder="Digita la URL">
+    <button class="submit-button" type="submit">Añadir</button>
   </form>
+  <section class="rss-group">
+    <ul class="links-list">
+
+    </ul>
+  </section>
 
   <script type="module" src="/src/main.js"></script>
 </body>

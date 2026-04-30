@@ -17,7 +17,10 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.13.6",
     "bootstrap": "^5.3.8",
-    "popper": "^1.0.1"
+    "popper": "^1.0.1",
+    "valtio": "^2.3.1",
+    "yup": "^1.7.1"
   }
 }

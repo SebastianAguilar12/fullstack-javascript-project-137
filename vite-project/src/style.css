@@ -296,3 +296,21 @@ code {
     border-right-color: var(--border);
   }
 }
+
+.submit-button {
+  background-color: blue;
+  border-radius: 5%;
+}
+
+.is-invalid {
+  border: 2px solid red !important;
+}
+
+.feedback {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.text-danger {
+  color: red;
+}
