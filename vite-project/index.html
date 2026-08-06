@@ -1,27 +1,36 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A clean RSS feed aggregator" />
+    <title>RSS Reader</title>
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-panel">
+        <!-- <p class="eyebrow">READ • COLLECT • DISCOVER</p> -->
+        <h1>RSS Reader</h1>
+        <p class="hero-copy">Start reading RSS today! It's simple and lovely.</p>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>vite-project</title>
-</head>
+        <form id="rss-form" novalidate>
+          <div class="form-row">
+            <div class="input-container">
+              <input type="url" id="link" placeholder=" " autocomplete="url" />
+              <label for="link">RSS Link</label>
+            </div>
+            <button type="submit">Add</button>
+          </div>
+          <p class="eyebrow">Example: https://lorem-rss.hexlet.app/feed</p>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </form>
+      </section>
 
-<body>
-  <div id="app"></div>
-  <form id="rss-form">
-    <label for="link">RSS Link:</label>
-    <input type="text" id="link" placeholder="Digita la URL">
-    <button class="submit-button" type="submit">Añadir</button>
-  </form>
-  <section class="rss-group">
-    <ul class="links-list">
-
-    </ul>
-  </section>
-
-  <script type="module" src="/src/main.js"></script>
-</body>
-
+      <section id="app" class="content-grid" aria-live="polite">
+        <div id="posts" class="content-panel">Publicaciones</div>
+        <div id="feeds" class="content-panel">Fuentes</div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
